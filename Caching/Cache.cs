@@ -21,8 +21,8 @@ namespace Caching
 	{
 		private int capacity;
 		private int count;
-		Dictionary<int, LRUNode> map;
-		LRUDoubleLinkedList doubleLinkedList;
+		private Dictionary<int, LRUNode> map;
+		private LRUDoubleLinkedList doubleLinkedList;
 		public LRUCache(int capacity)
 		{
 			this.capacity = capacity;
@@ -36,8 +36,8 @@ namespace Caching
 		{
 			if (!map.ContainsKey(key)) return -1;
 			LRUNode node = map[key];
-			doubleLinkedList.RemoveNode(node);
-			doubleLinkedList.AddToTop(node);
+			doubleLinkedList.RemoveNode(node); // Remove node out of the list
+			doubleLinkedList.AddToTop(node); // Add back it on the top
 			return node.Value;
 		}
 
@@ -56,12 +56,12 @@ namespace Caching
 				// if cache is full, then remove the least recently used node
 				if (count == capacity)
 				{
-					LRUNode lru = doubleLinkedList.RemoveLRUNode();
-					map.Remove(lru.Key);
+					LRUNode lru = doubleLinkedList.RemoveLRUNode(); // remove the node
+					map.Remove(lru.Key); // the move the key out of the dictionary
 					count--;
 				}
 
-				// add a new node
+				// add a new node on top
 				LRUNode node = new LRUNode(key, value);
 				doubleLinkedList.AddToTop(node);
 				map[key] = node;
